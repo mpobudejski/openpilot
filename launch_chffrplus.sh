@@ -9,6 +9,10 @@ source "$BASEDIR/launch_env.sh"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 function two_init {
+
+  # Wifi scan
+  wpa_cli IFNAME=wlan0 SCAN
+
   # Restrict Android and other system processes to the first two cores
   echo 0-1 > /dev/cpuset/background/cpus
   echo 0-1 > /dev/cpuset/system-background/cpus
@@ -71,9 +75,14 @@ function two_init {
   fi
 }
 
+function tici_init {
+
+  # set success flag for current boot slot
+  sudo abctl --set_success
+
+}
+
 function launch {
-  # Wifi scan
-  wpa_cli IFNAME=wlan0 SCAN
 
   # Remove orphaned git lock if it exists on boot
   [ -f "$DIR/.git/index.lock" ] && rm -f $DIR/.git/index.lock
@@ -117,9 +126,11 @@ function launch {
     fi
   fi
 
-  # comma two init
+  # hardware specific init
   if [ -f /EON ]; then
     two_init
+  elif [ -f /TICI ]; then
+    tici_init
   fi
 
   # handle pythonpath
