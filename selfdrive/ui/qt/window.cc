@@ -10,7 +10,7 @@
 #include <QMouseEvent>
 
 #include "window.hpp"
-#include "offroad/input_field.hpp"
+#include "qt_window.hpp"
 #include "offroad/settings.hpp"
 #include "offroad/onboarding.hpp"
 
@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
 
 void MainWindow::openSettings() {
   main_layout->setCurrentIndex(1);
+  settingsWindow->refreshParams();
 }
 
 void MainWindow::closeSettings() {
